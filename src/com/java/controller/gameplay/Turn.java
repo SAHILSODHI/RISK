@@ -277,16 +277,7 @@ public class Turn implements ReinforcementPhase, AttackPhase, FortificationPhase
 		    	// once we ensure a country has more than 1 army, it becomes a potential key
 		    	// ****
 		    	// Step 3: now try to build the paths by delegating to the buildFortificationPath method 
-		    	buildFortificationPath(potentialCountry);
-		    	//carefully checking neighbors and whether or not they're in scope (i.e actually belong to the current player)
-		    	adjacentCountries = getAdjacentCountries(potentialCountry);
-		    	for (String adjacentCountry : adjacentCountries){
-		    		// need to ensure the adjacent country is also owned by that very same player - otherwise there's no path
-		    		if(poolOfPotentialCountries.contains(adjacentCountry)) {
-		    			fortificationScenarios.putIfAbsent(potentialCountry, new ArrayList<String>());
-		    			fortificationScenarios.get(potentialCountry).add(adjacentCountry);
-		    		}
-		    	}
+		    	buildFortificationPath(fortificationScenarios , potentialCountry);
 		    }
 		}
 		
@@ -296,5 +287,21 @@ public class Turn implements ReinforcementPhase, AttackPhase, FortificationPhase
 		
 		return fortificationScenarios;
 	}
+	
+	@Override
+	public void buildFortificationPath(HashMap<String, ArrayList<String>> fortificationScenarios, String rootCountry) {
+	
+		HashSet<String> adjacentCountries = new HashSet<String>();
+		adjacentCountries = getAdjacentCountries(rootCountry);
+		for (String adjacentCountry : adjacentCountries){
+    		// need to ensure the adjacent country is also owned by that very same player - otherwise there's no path
+    		if(this.gameData.gameMap.getCountry(adjacentCountry).getCountryConquerorID() == currentPlayerID) {
+    			fortificationScenarios.putIfAbsent(rootCountry, new ArrayList<String>());
+    			fortificationScenarios.get(rootCountry).add(adjacentCountry);
+    			buildFortificationPath(adjacentCountry);
+    		}
+		
+	}
+	
 
 }
