@@ -6,7 +6,6 @@ import com.java.model.cards.Card;
 import com.java.model.gamedata.GameData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -25,6 +24,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class Player extends Observable {
 
+	Reinforce reinforce;
+	Attack attack;
+	Fortify fortify;
 	private Integer playerID;
 	private String playerName;
 	private Integer orderOfPlay;
